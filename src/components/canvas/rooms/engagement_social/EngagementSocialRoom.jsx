@@ -1,4 +1,5 @@
 import React, { useRef, useMemo, useEffect, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useFrame } from '@react-three/fiber';
 import { useTexture, Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -289,7 +290,7 @@ const EngagementSocialRoom = ({ showRoom, onReady, isExiting, isWarmup }) => {
                             {/* ======================================================= */}
                             {/* 🌟 DETAIL MODAL PLAQUE (Shown on Card Click)            */}
                             {/* ======================================================= */}
-                            {selectedEngagement && (
+                            {selectedEngagement && typeof document !== 'undefined' && createPortal(
                                 <div
                                     className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0D2F4F]/40 backdrop-blur-sm animate-fade-in-up"
                                     onClick={handleCloseModal}
@@ -386,7 +387,8 @@ const EngagementSocialRoom = ({ showRoom, onReady, isExiting, isWarmup }) => {
                                             </svg>
                                         </button>
                                     </div>
-                                </div>
+                                </div>,
+                                document.body
                             )}
                         </div>
                     </Html>
