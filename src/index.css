@@ -1,0 +1,545 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .arch-top {
+    clip-path: ellipse(75% 100% at 50% 0%);
+  }
+
+  .moorish-arch {
+    border-top-left-radius: 9999px;
+    border-top-right-radius: 9999px;
+  }
+}
+
+/* Custom subtle scrollbar for the cards container */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(250, 247, 242, 0.4);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.35);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.6);
+}
+
+/* ============================================ */
+/* 🎨 APROPOS FULLSCREEN GALLERY               */
+/* ============================================ */
+
+.apropos-fullscreen-wrapper {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  transform: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: none !important;
+  z-index: 25 !important;
+  background: #ffffff !important;
+}
+
+.apropos-fullscreen-container {
+  width: 100%;
+  max-width: 1560px;
+  height: 100%;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 2.5rem 1.5rem 2.5rem;
+  box-sizing: border-box;
+  pointer-events: auto;
+  margin: auto;
+}
+
+/* Section header */
+.apropos-gallery__header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: aproposSlideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  flex-shrink: 0;
+}
+
+.apropos-gallery__header-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  margin-bottom: 0.3rem;
+}
+
+.apropos-gallery__header-line {
+  height: 2px;
+  width: 5rem;
+  background: linear-gradient(to right, transparent, #D4AF37);
+}
+
+.apropos-gallery__header-line--right {
+  background: linear-gradient(to left, transparent, #D4AF37);
+}
+
+.apropos-gallery__header-symbols {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #D4AF37;
+  font-size: 0.95rem;
+}
+
+.apropos-gallery__header-symbols span:nth-child(2) {
+  font-size: 1.15rem;
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+}
+
+.apropos-gallery__title {
+  color: #0D2F4F;
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(1.85rem, 2.5vw, 2.5rem);
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.apropos-gallery__subtitle {
+  color: #5E6A73;
+  font-size: clamp(0.75rem, 0.95vw, 0.95rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 0.35rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+}
+
+.apropos-gallery__header-bar {
+  width: 6rem;
+  height: 3px;
+  background: rgba(212, 175, 55, 0.65);
+  border-radius: 9999px;
+  margin: 0.6rem auto 0;
+}
+
+/* Grid */
+.apropos-gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: clamp(2rem, 3.5vw, 4.5rem);
+  row-gap: clamp(1.25rem, 2.2vh, 2.25rem);
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+}
+
+/* Card */
+.apropos-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: transparent;
+  border: none;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  outline: none;
+  position: relative;
+  opacity: 0;
+  animation: aproposSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 1.5rem;
+  transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.apropos-card__image-zone {
+  width: 100%;
+  height: clamp(170px, 24vh, 250px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  position: relative;
+  margin-bottom: 0.6rem;
+}
+
+.apropos-card__image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              filter 300ms ease;
+  filter: drop-shadow(0 8px 24px rgba(13, 47, 79, 0.12));
+  pointer-events: none;
+  user-select: none;
+}
+
+.apropos-card:hover .apropos-card__image,
+.apropos-card:focus-visible .apropos-card__image {
+  transform: translateY(-10px) scale(1.08);
+  filter: drop-shadow(0 14px 32px rgba(13, 47, 79, 0.18));
+}
+
+.apropos-card__text-zone {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.apropos-card__title {
+  color: #0D2F4F;
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(1.05rem, 1.35vw, 1.35rem);
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  margin: 0;
+  padding: 0 0.5rem;
+  transition: color 280ms ease;
+  min-height: 2.4em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apropos-card:hover .apropos-card__title,
+.apropos-card:focus-visible .apropos-card__title {
+  color: #D4AF37;
+}
+
+.apropos-card__decorator {
+  width: 3.5rem;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, #D4AF37 40%, #D4AF37 60%, transparent 100%);
+  border-radius: 9999px;
+  margin-top: 0.5rem;
+  opacity: 0.5;
+  transition: opacity 280ms ease, width 280ms ease;
+}
+
+.apropos-card:hover .apropos-card__decorator {
+  opacity: 1;
+  width: 5.5rem;
+}
+
+/* ============================================ */
+/* 📄 DETAIL MODAL (FEUILLE CENTRÉE AU MILIEU)  */
+/* ============================================ */
+
+.apropos-modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 1.5rem !important;
+  background: rgba(13, 47, 79, 0.55) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  animation: aproposFadeIn 0.25s ease forwards;
+  pointer-events: auto !important;
+  box-sizing: border-box !important;
+}
+
+.apropos-modal-container {
+  position: relative;
+  width: 100%;
+  max-width: 44rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: auto;
+  pointer-events: auto;
+}
+
+.apropos-modal-nav-btn {
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: #FAF7F2;
+  border: 1.5px solid rgba(212, 175, 55, 0.6);
+  color: #0D2F4F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 18px rgba(13, 47, 79, 0.15);
+}
+
+.apropos-modal-nav-btn:hover {
+  color: #D4AF37;
+  border-color: #D4AF37;
+  background: #FFFFFF;
+  transform: scale(1.12);
+}
+
+.apropos-modal-nav-btn:active {
+  transform: scale(0.95);
+}
+
+.apropos-modal-card {
+  position: relative;
+  flex: 1;
+  max-width: 35rem;
+  background: #FAF7F2;
+  border-radius: 1.75rem;
+  padding: 2.25rem 2rem 2rem 2rem;
+  border: 1.5px solid rgba(212, 175, 55, 0.45);
+  box-shadow: 0 30px 80px -15px rgba(13, 47, 79, 0.35), 0 0 0 1px rgba(212, 175, 55, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: aproposSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.apropos-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: #0D2F4F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  z-index: 10;
+}
+
+.apropos-modal-close:hover {
+  background: #FAF7F2;
+  border-color: #D4AF37;
+  color: #D4AF37;
+  transform: scale(1.1);
+}
+
+.apropos-modal__image {
+  width: 9rem;
+  height: 9rem;
+  object-fit: contain;
+  margin-bottom: 0.75rem;
+  filter: drop-shadow(0 4px 14px rgba(13, 47, 79, 0.12));
+}
+
+.apropos-modal__title {
+  color: #0D2F4F;
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: 0.03em;
+  margin: 0;
+}
+
+.apropos-modal__subtitle {
+  color: #D4AF37;
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  margin-top: 0.25rem;
+}
+
+.apropos-modal__separator {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.85rem 0;
+}
+
+.apropos-modal__separator-line {
+  height: 1px;
+  flex: 1;
+}
+
+.apropos-modal__separator-line--left {
+  background: linear-gradient(to right, transparent, rgba(212, 175, 55, 0.6));
+}
+
+.apropos-modal__separator-line--right {
+  background: linear-gradient(to left, transparent, rgba(212, 175, 55, 0.6));
+}
+
+.apropos-modal__separator-diamond {
+  color: #D4AF37;
+  font-size: 0.8rem;
+}
+
+.apropos-modal__description {
+  color: rgba(13, 47, 79, 0.9);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  text-align: center;
+  padding: 0 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.apropos-modal__highlights {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.apropos-modal__highlights ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.apropos-modal__highlights li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.825rem;
+  color: #0D2F4F;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+}
+
+.apropos-modal__highlights li span:first-child {
+  color: #D4AF37;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.apropos-modal__tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.apropos-modal__tag {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.725rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+  background: rgba(13, 47, 79, 0.05);
+  color: #0D2F4F;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+/* ============================================ */
+/* 🎞️ KEYFRAMES                                */
+/* ============================================ */
+
+@keyframes aproposSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes aproposFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================ */
+/* 📱 RESPONSIVE                                */
+/* ============================================ */
+
+@media (max-width: 1024px) {
+  .apropos-gallery__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .apropos-gallery__title {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .apropos-gallery__grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.25rem;
+    max-width: 20rem;
+    margin: 0 auto;
+  }
+
+  .apropos-gallery__title {
+    font-size: 1.15rem;
+  }
+
+  .apropos-gallery__subtitle {
+    font-size: 0.6rem;
+  }
+
+  .apropos-card__title {
+    font-size: 0.8125rem;
+  }
+
+  .apropos-modal__image {
+    width: 8rem;
+    height: 8rem;
+  }
+
+  .apropos-modal-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .apropos-modal-nav-btn {
+    width: 2rem;
+    height: 2rem;
+  }
+}
