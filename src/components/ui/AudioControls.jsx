@@ -1,8 +1,14 @@
 import { useAudio } from '../../context/AudioManager';
+import { toggleMute as toggleBgmMute } from '../../utils/audioManager';
 import '../../styles/AudioControls.scss';
 
 const AudioControls = () => {
     const { isMuted, toggleMute, globalVolume, setGlobalVolume } = useAudio();
+
+    const handleMuteToggle = () => {
+        toggleMute();
+        toggleBgmMute();
+    };
 
     // Hand-drawn SVG Icons
     const SoundOnIcon = () => (
@@ -39,7 +45,7 @@ const AudioControls = () => {
             {/* Mute Toggle Button */}
             <button
                 className="mute-btn"
-                onClick={toggleMute}
+                onClick={handleMuteToggle}
                 aria-label={isMuted ? "Unmute" : "Mute"}
             >
                 {isMuted || globalVolume === 0 ? <SoundOffIcon /> : <SoundOnIcon />}

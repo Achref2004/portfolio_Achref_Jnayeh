@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { useScene } from '../../context/SceneContext';
 import { useAudio } from '../../context/AudioManager';
-import { setMusicVolume, getMusicVolume } from '../../utils/audioManager';
+import { setMusicVolume, getMusicVolume, getIsMuted as getBgmMuted } from '../../utils/audioManager';
 import { useAchievements } from '../../context/AchievementsContext';
 import AchievementPopup from './AchievementPopup';
 import '../../styles/NavigationUI.scss';
@@ -31,7 +31,6 @@ const PIN_SLOT_OFFSET_Y = {
 
 const NavigationUI = () => {
     const { currentRoom, isInRoom, requestExit, hasEntered, teleportTo, isTeleporting } = useScene();
-    const { isMuted, toggleMute, globalVolume, setGlobalVolume } = useAudio();
     const { showTutorial } = useAchievements();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [hoveredRoom, setHoveredRoom] = useState(null);
@@ -40,6 +39,7 @@ const NavigationUI = () => {
     // Audio controls state
     const [isAudioMenuOpen, setIsAudioMenuOpen] = useState(false);
     const [bgmVol, setBgmVol] = useState(0.3);
+    const [isBgmMuted, setIsBgmMuted] = useState(getBgmMuted());
     const [isUIHidden, setIsUIHidden] = useState(false);
 
     // Refs for focus management
@@ -62,13 +62,20 @@ const NavigationUI = () => {
 
     useEffect(() => {
         setBgmVol(getMusicVolume());
+        setIsBgmMuted(getBgmMuted());
 
         const handleMusicVolumeChange = (e) => {
             setBgmVol(e.detail);
+            setIsBgmMuted(e.detail === 0);
         };
+        const handleMusicMuteChange = (e) => setIsBgmMuted(e.detail);
         window.addEventListener('musicVolumeChanged', handleMusicVolumeChange);
+        window.addEventListener('musicMuteChanged', handleMusicMuteChange);
 
-        return () => window.removeEventListener('musicVolumeChanged', handleMusicVolumeChange);
+        return () => {
+            window.removeEventListener('musicVolumeChanged', handleMusicVolumeChange);
+            window.removeEventListener('musicMuteChanged', handleMusicMuteChange);
+        };
     }, []);
 
     const handleBgmChange = (val) => {
@@ -205,7 +212,7 @@ const NavigationUI = () => {
                         aria-label="Audio Settings"
                         aria-expanded={isAudioMenuOpen}
                     >
-                        {isMuted ? (
+                        {isBgmMuted ? (
                             <svg viewBox="0 0 24 24" className="icon-audio">
                                 <path d="M11 5L6 9H2v6h4l5 4V5z" />
                                 <line x1="23" y1="9" x2="17" y2="15" />
@@ -359,21 +366,6 @@ const NavigationUI = () => {
                                     className="paper-slider"
                                     aria-label="Music volume"
                                     aria-valuetext={`${Math.round(bgmVol * 100)} percent`}
-                                />
-                            </div>
-                            <div className="slider-group">
-                                <div className="slider-label">
-                                    <span>SFX</span>
-                                    <span>{Math.round(globalVolume * 100)}%</span>
-                                </div>
-                                <input
-                                    type="range"
-                                    min="0" max="1" step="0.01"
-                                    value={globalVolume}
-                                    onChange={(e) => setGlobalVolume(parseFloat(e.target.value))}
-                                    className="paper-slider"
-                                    aria-label="SFX volume"
-                                    aria-valuetext={`${Math.round(globalVolume * 100)} percent`}
                                 />
                             </div>
                         </div>

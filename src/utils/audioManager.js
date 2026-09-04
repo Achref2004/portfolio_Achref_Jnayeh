@@ -19,7 +19,10 @@ export const initAudio = () => {
         bgMusicAudio = new Audio('/sounds/Gladiator - Now We Are Free Super Theme Song.mp3');
         bgMusicAudio.preload = 'auto'; // Force browser to fetch data immediately
         bgMusicAudio.loop = true;
-        bgMusicAudio.volume = 0.3; // Default volume for background cozy music
+        const savedVolume = Number.parseFloat(localStorage.getItem('music_volume'));
+        bgMusicAudio.volume = Number.isFinite(savedVolume)
+            ? Math.max(0, Math.min(1, savedVolume))
+            : 0.3;
         bgMusicAudio.muted = isMuted; // Apply synced mute state
 
         // Trigger background load
@@ -49,27 +52,32 @@ export const toggleMute = () => {
     if (bgMusicAudio) {
         bgMusicAudio.muted = isMuted;
     }
+    window.dispatchEvent(new CustomEvent('musicMuteChanged', { detail: isMuted }));
     return isMuted;
 };
 
 export const getIsMuted = () => isMuted;
 
 export const setMusicVolume = (vol) => {
+    initAudio();
+    const nextVolume = Math.max(0, Math.min(1, vol));
+
     if (bgMusicAudio) {
-        bgMusicAudio.volume = Math.max(0, Math.min(1, vol));
+        bgMusicAudio.volume = nextVolume;
+        localStorage.setItem('music_volume', String(nextVolume));
         // Auto-unmute if user drags slider up
-        if (vol > 0 && isMuted) {
+        if (nextVolume > 0 && isMuted) {
             isMuted = false;
             bgMusicAudio.muted = false;
         }
 
         // Ensure playback continues if we unmute, ONLY if the music has actually been requested to start
-        if (vol > 0 && bgMusicAudio.paused && bgMusicStarted) {
+        if (nextVolume > 0 && bgMusicAudio.paused && bgMusicStarted) {
             bgMusicAudio.play().catch(e => console.warn(e));
         }
     }
     // Dispatch event so UI sliders can stay in sync if changed programmatically
-    window.dispatchEvent(new CustomEvent('musicVolumeChanged', { detail: vol }));
+    window.dispatchEvent(new CustomEvent('musicVolumeChanged', { detail: nextVolume }));
 };
 
 export const getMusicVolume = () => {
