@@ -100,7 +100,9 @@ const Preloader = ({ onComplete, ready }) => {
 
   // Custom throttled progress state to prevent React 'Maximum update depth exceeded'
   const [realProgress, setRealProgress] = useState(0);
-  const [active, setActive] = useState(true);
+  // Preloads can finish before this component installs LoadingManager callbacks.
+  // Start inactive so the loader can still advance to the ready-state plateau.
+  const [active, setActive] = useState(false);
 
   useEffect(() => {
     let t = 0;
@@ -157,9 +159,9 @@ const Preloader = ({ onComplete, ready }) => {
   const textRightRef = useRef(null);
 
   // Track visual progress entirely in refs to skip React renders 60x/sec!
-  const [targetProgress, setTargetProgress] = useState(0);
-  const displayProgressRef = useRef(0);
-  const trackerRef = useRef({ val: 0 });
+  const [targetProgress, setTargetProgress] = useState(90);
+  const displayProgressRef = useRef(90);
+  const trackerRef = useRef({ val: 90 });
   const readyRef = useRef(ready);
 
   useEffect(() => { readyRef.current = ready; }, [ready]);
@@ -295,7 +297,8 @@ const Preloader = ({ onComplete, ready }) => {
 
   // Fallback trigger if ready becomes true AFTER 99.5% reached
   useEffect(() => {
-    if (displayProgressRef.current >= 99.5 && ready && !exitStarted.current) {
+    if (ready && !exitStarted.current) {
+      setTargetProgress(100);
       exitStarted.current = true;
       startExit();
     }

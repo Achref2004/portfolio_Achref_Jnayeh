@@ -65,7 +65,7 @@ const EntranceDoors = ({
     const handleRightPaintedTexture = useTexture(isMobileDevice ? dummyTex : '/textures/doors/handle_right_painted.webp');
 
     // Dynamic textures for mobile
-    const doorBackTexture = useTexture(isMobileDevice ? '/textures/doors/door_back.webp' : '/textures/doors/door_right_painted.png');
+    const doorBackTexture = useTexture(isMobileDevice ? '/textures/corridor/doors/door_back.webp' : '/textures/doors/door_right_painted.png');
     const edgeTexture = useTexture(isMobileDevice ? '/textures/doors/pien_sketch.webp' : '/textures/doors/pien_sketch.webp');
 
     const bricksTexture = useTexture('/textures/entrance/wall_bricks_2.png');

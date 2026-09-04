@@ -47,26 +47,7 @@ const RoomWarmup = ({ onWarmupComplete, isLowTier }) => {
                 });
             };
 
-            // On low tier, bypass intense gl.compileAsync to save memory and avoid Context Lost
-            if (isLowTier) {
-                finishWarmup();
-                return;
-            }
-
-            // Force compile all shaders in the scene (including warm-up rooms)
-            // Use 2026 compileAsync to avoid blocking the main thread!
-            if (gl.compileAsync) {
-                gl.compileAsync(scene, camera, scene)
-                    .then(finishWarmup)
-                    .catch((err) => {
-                        console.error('Async compilation failed, falling back to sync', err);
-                        gl.compile(scene, camera);
-                        finishWarmup();
-                    });
-            } else {
-                gl.compile(scene, camera);
-                finishWarmup();
-            }
+            finishWarmup();
         }
     });
 
