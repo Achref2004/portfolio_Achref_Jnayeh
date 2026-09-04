@@ -197,6 +197,7 @@ function AppContent() {
 }
 
 import { AchievementsProvider } from './context/AchievementsContext';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function App() {
   // Preload browser-based images (for standard <img> tags) immediately upon mounting App
@@ -211,6 +212,7 @@ export default function App() {
     <PerformanceProvider>
       <AchievementsProvider>
         <AppContent />
+        <Analytics />
       </AchievementsProvider>
     </PerformanceProvider>
   );
